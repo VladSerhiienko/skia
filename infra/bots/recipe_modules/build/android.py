@@ -51,6 +51,8 @@ def compile_fn(api, checkout_root, out_dir):
     args['skia_enable_vulkan_debug_layers'] = 'false'
     args['skia_use_gl'] = 'false'
     args['skia_use_vulkan'] = 'true'
+  if 'Coquelicot' in extra_tokens:
+    args['skia_use_coquelicot'] = 'true'
   if 'ASAN' in extra_tokens:
     args['sanitize'] = '"ASAN"'
   if 'Graphite' in extra_tokens:

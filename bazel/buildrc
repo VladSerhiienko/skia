@@ -226,13 +226,17 @@ build:gl_ganesh --action_env=DISPLAY=:1
 build:vulkan_ganesh --enable_gpu_test_utils --gpu_backend=vulkan_ganesh \
                     --cc_output_directory_tag=vulkan_ganesh
 
+build:coquelicot_ganesh --enable_gpu_test_utils --gpu_backend=coquelicot_ganesh \
+                        --cc_output_directory_tag=coquelicot_ganesh
+
 build:metal_ganesh --enable_gpu_test_utils --gpu_backend=metal_ganesh\
-                    --cc_output_directory_tag=metal_ganesh
+                   --cc_output_directory_tag=metal_ganesh
 
 # Short-hand aliases
 build:cpu --config=cpu_only
 build:gl --config=gl_ganesh
 build:vk --config=vulkan_ganesh
+build:coquelicot --config=coquelicot_ganesh
 
 # Layering check does not work without sandboxing because the system headers are not in the
 # right spot and so they are not found.

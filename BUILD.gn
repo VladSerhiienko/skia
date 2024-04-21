@@ -924,6 +924,11 @@ optional("gpu_shared") {
     }
   }
 
+  if (skia_use_coquelicot) {
+    public_defines += [ "SK_COQUELICOT" ]
+    sources += skia_shared_coquelicot_sources
+  }
+
   if (skia_use_metal) {
     public_defines += [ "SK_METAL" ]
     sources += skia_shared_mtl_sources
@@ -932,6 +937,13 @@ optional("gpu_shared") {
   if (is_android) {
     sources += skia_shared_android_sources
   }
+}
+
+config("coquelicot_include_dirs") {
+  include_dirs = [
+    "src/gpu/ganesh/coquelicot/coquelicot_rhi/sources/coquelicot/metal-cpp",
+    "src/gpu/ganesh/coquelicot/coquelicot_rhi/sources/coquelicot",
+    "src/gpu/ganesh/coquelicot/coquelicot_rhi/sources/solodun" ]
 }
 
 optional("gpu") {
@@ -950,7 +962,7 @@ optional("gpu") {
     deps += [ ":workaround_list" ]
   }
   public_defines = []
-  public_configs = []
+  public_configs = [ ":coquelicot_include_dirs", ":cpp17" ]
   public_deps = []
 
   public = skia_gpu_public
@@ -1014,6 +1026,12 @@ optional("gpu") {
     }
     public += skia_gpu_gl_public
     sources += skia_gpu_gl_private
+  }
+
+  if (skia_use_coquelicot) {
+    sources += skia_gpu_coquelicot_private
+    # configs += [ ":coquelicot_include_dirs" ]
+    # public_deps += [ ":coquelicot_include_dirs" ]
   }
 
   if (skia_use_vulkan) {

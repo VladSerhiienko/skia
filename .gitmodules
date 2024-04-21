@@ -1,0 +1,3 @@
+[submodule "src/gpu/ganesh/coquelicot/coquelicot_rhi"]
+	path = src/gpu/ganesh/coquelicot/coquelicot_rhi
+	url = git@github.com:VladSerhiienko/Coquelicot.git

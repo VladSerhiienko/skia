@@ -413,6 +413,11 @@ var gniExportDescs = []exporter.GNIExportDesc{
 				"//include/private/gpu/vk:private_hdrs",
 				"//src/gpu/vk:vk_hdrs",
 				"//src/gpu/vk:vk_srcs"}},
+		{Var: "skia_shared_coquelicot_sources",
+			Rules: []string{
+				"//include/private/gpu/coquelicot:private_hdrs",
+				"//src/gpu/coquelicot:coquelicot_hdrs",
+				"//src/gpu/coquelicot:coquelicot_srcs"}},
 		{Var: "skia_shared_mtl_sources",
 			Rules: []string{
 				"//include/gpu/mtl:public_hdrs",

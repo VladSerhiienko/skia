@@ -184,6 +184,7 @@ def compile_fn(api, checkout_root, out_dir):
       'skia_use_expat':                'true',
       'skia_use_freetype':             'true',
       'skia_use_vulkan':               'true',
+      'skia_use_coquelicot':           'true',
     })
 
   if 'Coverage' in extra_tokens:

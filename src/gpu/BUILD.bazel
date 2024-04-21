@@ -67,6 +67,7 @@ string_flag_with_values(
         "gl_ganesh",
         "metal_ganesh",
         "vulkan_ganesh",
+        "coquelicot_ganesh",
         "dawn_graphite",
         "metal_graphite",
         "vulkan_graphite",
@@ -88,6 +89,7 @@ selects.config_setting_group(
         ":gl_ganesh",
         ":metal_ganesh",
         ":vulkan_ganesh",
+        ":coquelicot_ganesh",
     ],
     visibility = ["//:__subpackages__"],
 )
@@ -98,6 +100,7 @@ selects.config_setting_group(
         ":dawn_graphite",
         ":metal_graphite",
         ":vulkan_graphite",
+        ":coquelicot_graphite",
     ],
     visibility = ["//:__subpackages__"],
 )
@@ -145,6 +148,14 @@ selects.config_setting_group(
     ],
 )
 
+selects.config_setting_group(
+    name = "has_coquelicot",
+    match_any = [
+        ":coquelicot_ganesh",
+        ":coquelicot_graphite",
+    ],
+)
+
 skia_filegroup(
     name = "srcs",
     srcs = [
@@ -155,6 +166,7 @@ skia_filegroup(
     ] + select(
         {
             ":has_vulkan": ["//src/gpu/vk:srcs"],
+            ":has_coquelicot": ["//src/gpu/coquelicot:srcs"],
             "@platforms//os:android": ["//src/gpu/android:shared_android_srcs"],
             "//conditions:default": [],
         },
@@ -180,6 +192,7 @@ skia_filegroup(
         "//src/gpu/tessellate:private_hdrs",
     ] + select_multi(
         {
+            ":has_coquelicot": ["//src/gpu/coquelicot:private_hdrs"],
             ":has_vulkan": ["//src/gpu/vk:private_hdrs"],
             ":has_metal": ["//src/gpu/mtl:private_hdrs"],
         },
@@ -195,6 +208,7 @@ skia_cc_deps(
     ] + select_multi(
         {
             ":has_vulkan": ["//src/gpu/vk:deps"],
+            # ":has_coquelicot": ["//src/gpu/coquelicot:deps"],
         },
     ),
 )

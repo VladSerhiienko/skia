@@ -62,6 +62,10 @@ GPU_DEFINES = select_multi({
         "SK_VULKAN",
         "SK_GANESH",
     ],
+    "//src/gpu:coquelicot_ganesh": [
+        "SK_COQUELICOT",
+        "SK_GANESH",
+    ],
     "//src/gpu:metal_ganesh": [
         "SK_METAL",
         "SK_GANESH",

@@ -292,6 +292,7 @@ skia_filegroup(
         {
             "//src/gpu:gl_ganesh": ["//src/gpu/ganesh/gl:srcs"],
             "//src/gpu:vulkan_ganesh": ["//src/gpu/ganesh/vk:srcs"],
+            "//src/gpu:coquelicot_ganesh": ["//src/gpu/ganesh/coquelicot:srcs"],
             "@platforms//os:android": ["//src/gpu/ganesh/surface:android_srcs"],
             # TODO(kjlubick) d3d backend
         },
@@ -331,6 +332,7 @@ skia_filegroup(
         {
             "//src/gpu:gl_ganesh": ["//src/gpu/ganesh/gl:private_hdrs"],
             "//src/gpu:vulkan_ganesh": ["//src/gpu/ganesh/vk:private_hdrs"],
+            "//src/gpu:coquelicot_ganesh": ["//src/gpu/ganesh/coquelicot:private_hdrs"],
             "//src/gpu:metal_ganesh": ["//src/gpu/ganesh/mtl:private_hdrs"],
             # TODO(kjlubick) d3d backend
         },

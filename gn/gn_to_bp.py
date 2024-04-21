@@ -471,12 +471,14 @@ def generate_args(target_os, enable_gpu, renderengine = False):
     d['skia_android_framework_use_perfetto'] = 'true'
 
   if enable_gpu:
-    d['skia_use_vulkan']    = 'true'
-    d['skia_enable_ganesh'] = 'true'
+    d['skia_use_vulkan']     = 'true'
+    d['skia_use_coquelicot'] = 'true'
+    d['skia_enable_ganesh']  = 'true'
     if renderengine:
       d['skia_enable_graphite'] = 'true'
   else:
     d['skia_use_vulkan']      = 'false'
+    d['skia_use_coquelicot']  = 'false'
     d['skia_enable_ganesh']   = 'false'
     d['skia_enable_graphite'] = 'false'
 

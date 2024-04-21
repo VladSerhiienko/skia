@@ -46,6 +46,10 @@ skia_cc_library(
             "//tools/gpu/vk:private_hdrs",
             "//tools/gpu/vk:srcs",
         ],
+        "//src/gpu:coquelicot_ganesh": [
+            "//tools/gpu/coquelicot:private_hdrs",
+            "//tools/gpu/coquelicot:srcs",
+        ],
         "//src/gpu:metal_ganesh": [
             "//tools/gpu/mtl:private_hdrs",
             "//tools/gpu/mtl:srcs",
