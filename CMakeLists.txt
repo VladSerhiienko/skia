@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10.2)
 
 project("skia")
+include(FetchContent)
 include(ExternalProject)
 
 set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
@@ -1770,7 +1771,7 @@ set(BASE_SRCS_ALL
 
 add_library(SkiaBase STATIC ${BASE_SRCS_ALL})
 target_include_directories(SkiaBase PUBLIC ".")
-target_compile_definitions(SkiaBase PUBLIC -DSK_GANESH=1)
+target_compile_definitions(SkiaBase PUBLIC -DSK_GANESH=1 -DSK_USE_FREETYPE_EMBOLDEN=1 -DSK_BUILD_FOR_GOOGLE3=1)
 
 set(ENCODE_SRCS
     "src/encode/SkEncoder.cpp"
@@ -1821,6 +1822,7 @@ add_library(SkiaWebp STATIC ${ENCODE_WEBP_SRCS})
 add_dependencies(SkiaWebp libwebp) 
 target_include_directories(SkiaWebp PUBLIC "." "${CMAKE_BINARY_DIR}/libwebp-src/src" "${CMAKE_BINARY_DIR}/libwebp-build")
 target_link_libraries (SkiaWebp PRIVATE webp)
+target_compile_definitions(SkiaWebp PUBLIC -DSK_WEBP_ENCODER_USE_DEFAULT_METHOD=1)
 
 ExternalProject_Add(libpng
     GIT_REPOSITORY    https://github.com/pnggroup/libpng.git
@@ -1914,4 +1916,314 @@ add_library(SkiaCodec STATIC ${CODEC_SRCS_LIMITED})
 add_dependencies(SkiaCodec wuffs) 
 target_include_directories(SkiaCodec PUBLIC "." "${CMAKE_BINARY_DIR}/wuffs-src/release/c")
 target_link_libraries (SkiaCodec PRIVATE SkiaJpeg SkiaWebp SkiaPng)
+target_compile_definitions(SkiaCodec PUBLIC
+    -DSK_CODEC_DECODES_BMP=1
+    -DSK_CODEC_DECODES_WBMP=1
+    -DSK_CODEC_DECODES_PNG=1
+    -DSK_CODEC_DECODES_WEBP=1
+    -DSK_CODEC_DECODES_JPEG=1)
 
+set(MTL_HDRS
+    "src/gpu/ganesh/mtl/GrMtlAttachment.h"
+    "src/gpu/ganesh/mtl/GrMtlBuffer.h"
+    "src/gpu/ganesh/mtl/GrMtlCaps.h"
+    "src/gpu/ganesh/mtl/GrMtlCommandBuffer.h"
+    "src/gpu/ganesh/mtl/GrMtlCppUtil.h"
+    "src/gpu/ganesh/mtl/GrMtlDepthStencil.h"
+    "src/gpu/ganesh/mtl/GrMtlFramebuffer.h"
+    "src/gpu/ganesh/mtl/GrMtlGpu.h"
+    "src/gpu/ganesh/mtl/GrMtlOpsRenderPass.h"
+    "src/gpu/ganesh/mtl/GrMtlPipeline.h"
+    "src/gpu/ganesh/mtl/GrMtlPipelineState.h"
+    "src/gpu/ganesh/mtl/GrMtlPipelineStateBuilder.h"
+    "src/gpu/ganesh/mtl/GrMtlPipelineStateDataManager.h"
+    "src/gpu/ganesh/mtl/GrMtlRenderCommandEncoder.h"
+    "src/gpu/ganesh/mtl/GrMtlRenderTarget.h"
+    "src/gpu/ganesh/mtl/GrMtlResourceProvider.h"
+    "src/gpu/ganesh/mtl/GrMtlSampler.h"
+    "src/gpu/ganesh/mtl/GrMtlSemaphore.h"
+    "src/gpu/ganesh/mtl/GrMtlTexture.h"
+    "src/gpu/ganesh/mtl/GrMtlTextureRenderTarget.h"
+    "src/gpu/ganesh/mtl/GrMtlTrampoline.h"
+    "src/gpu/ganesh/mtl/GrMtlUniformHandler.h"
+    "src/gpu/ganesh/mtl/GrMtlUtil.h"
+    "src/gpu/ganesh/mtl/GrMtlVaryingHandler.h"
+    "src/gpu/mtl/MtlMemoryAllocatorImpl.h"
+)
+
+set(MTL_SRCS
+    "src/gpu/ganesh/mtl/GrMtlAttachment.mm"
+    "src/gpu/ganesh/mtl/GrMtlBackendSemaphore.mm"
+    "src/gpu/ganesh/mtl/GrMtlBackendSurface.mm"
+    "src/gpu/ganesh/mtl/GrMtlBuffer.mm"
+    "src/gpu/ganesh/mtl/GrMtlCaps.mm"
+    "src/gpu/ganesh/mtl/GrMtlCommandBuffer.mm"
+    "src/gpu/ganesh/mtl/GrMtlDepthStencil.mm"
+    "src/gpu/ganesh/mtl/GrMtlDirectContext.mm"
+    "src/gpu/ganesh/mtl/GrMtlFramebuffer.mm"
+    "src/gpu/ganesh/mtl/GrMtlGpu.mm"
+    "src/gpu/ganesh/mtl/GrMtlOpsRenderPass.mm"
+    "src/gpu/ganesh/mtl/GrMtlPipelineState.mm"
+    "src/gpu/ganesh/mtl/GrMtlPipelineStateBuilder.mm"
+    "src/gpu/ganesh/mtl/GrMtlPipelineStateDataManager.mm"
+    "src/gpu/ganesh/mtl/GrMtlRenderTarget.mm"
+    "src/gpu/ganesh/mtl/GrMtlResourceProvider.mm"
+    "src/gpu/ganesh/mtl/GrMtlSampler.mm"
+    "src/gpu/ganesh/mtl/GrMtlSemaphore.mm"
+    "src/gpu/ganesh/mtl/GrMtlTexture.mm"
+    "src/gpu/ganesh/mtl/GrMtlTextureRenderTarget.mm"
+    "src/gpu/ganesh/mtl/GrMtlTrampoline.mm"
+    "src/gpu/ganesh/mtl/GrMtlTypesPriv.h"
+    "src/gpu/ganesh/mtl/GrMtlTypesPriv.mm"
+    "src/gpu/ganesh/mtl/GrMtlUniformHandler.mm"
+    "src/gpu/ganesh/mtl/GrMtlUtil.mm"
+    "src/gpu/ganesh/mtl/GrMtlVaryingHandler.mm"
+    "src/gpu/ganesh/surface/SkSurface_GaneshMtl.mm"
+    "src/gpu/mtl/MtlMemoryAllocatorImpl.mm"
+    "src/gpu/mtl/MtlUtils.mm"
+    "src/gpu/mtl/MtlUtilsPriv.h"
+)
+
+add_library(SkiaMetal STATIC ${MTL_SRCS})
+target_include_directories(SkiaMetal PUBLIC ".")
+set_property (TARGET SkiaMetal APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
+
+ExternalProject_Add(libfreetype
+    GIT_REPOSITORY    https://github.com/freetype/freetype.git
+    GIT_TAG           VER-2-13-2
+    SOURCE_DIR        "${CMAKE_BINARY_DIR}/freetype-src"
+    BINARY_DIR        "${CMAKE_BINARY_DIR}/freetype-build"
+    # CONFIGURE_COMMAND ""
+    # BUILD_COMMAND     ""
+    INSTALL_COMMAND   ""
+    TEST_COMMAND      ""
+    CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
+)
+
+set(PORTS_SRCS_UNIX
+    "src/ports/SkDebug_stdio.cpp"
+    "src/ports/SkFontHost_FreeType_common.cpp"
+    "src/ports/SkFontHost_FreeType_common.h"
+    "src/ports/SkFontHost_FreeType.cpp"
+    "src/ports/SkFontMgr_custom.cpp"
+    "src/ports/SkFontMgr_custom_directory.cpp"
+    "src/ports/SkFontMgr_custom_embedded.cpp"
+    "src/ports/SkFontMgr_custom_empty.cpp"
+    "src/ports/SkFontMgr_custom.h"
+    # "src/ports/SkFontMgr_fontconfig.cpp"
+    "src/ports/SkGlobalInitialization_default.cpp"
+    "src/ports/SkMemory_malloc.cpp"
+    "src/ports/SkOSFile_posix.cpp"
+    "src/ports/SkOSFile_stdio.cpp"
+    "src/ports/SkOSLibrary.h"
+    "src/ports/SkOSLibrary_posix.cpp"
+    "src/ports/SkTypeface_FreeType.h"
+)
+
+add_library(SkiaPort STATIC ${PORTS_SRCS_UNIX})
+add_dependencies(SkiaPort libfreetype) 
+target_include_directories(SkiaPort PUBLIC "." "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
+target_link_libraries (SkiaPort PRIVATE freetype)
+target_compile_definitions(SkiaPort PUBLIC -DSK_BUILD_FOR_GOOGLE3=1)
+target_compile_definitions(SkiaPort PUBLIC
+    -DSK_FONTMGR_FREETYPE_DIRECTORY_AVAILABLE=1
+    -DSK_FONTMGR_FREETYPE_EMPTY_AVAILABLE=1
+)
+
+set(SKSG_LIB_SRCS
+    "modules/sksg/src/SkSGClipEffect.cpp"
+    "modules/sksg/src/SkSGColorFilter.cpp"
+    "modules/sksg/src/SkSGDraw.cpp"
+    "modules/sksg/src/SkSGEffectNode.cpp"
+    "modules/sksg/src/SkSGGeometryEffect.cpp"
+    "modules/sksg/src/SkSGGeometryNode.cpp"
+    "modules/sksg/src/SkSGGradient.cpp"
+    "modules/sksg/src/SkSGGroup.cpp"
+    "modules/sksg/src/SkSGImage.cpp"
+    "modules/sksg/src/SkSGInvalidationController.cpp"
+    "modules/sksg/src/SkSGMaskEffect.cpp"
+    "modules/sksg/src/SkSGMerge.cpp"
+    "modules/sksg/src/SkSGNode.cpp"
+    "modules/sksg/src/SkSGNodePriv.h"
+    "modules/sksg/src/SkSGOpacityEffect.cpp"
+    "modules/sksg/src/SkSGPaint.cpp"
+    "modules/sksg/src/SkSGPath.cpp"
+    "modules/sksg/src/SkSGPlane.cpp"
+    "modules/sksg/src/SkSGRect.cpp"
+    "modules/sksg/src/SkSGRenderEffect.cpp"
+    "modules/sksg/src/SkSGRenderNode.cpp"
+    "modules/sksg/src/SkSGScene.cpp"
+    "modules/sksg/src/SkSGText.cpp"
+    "modules/sksg/src/SkSGTransform.cpp"
+    "modules/sksg/src/SkSGTransformPriv.h"
+)
+
+add_library(SkiaSG STATIC ${SKSG_LIB_SRCS})
+target_include_directories(SkiaSG PUBLIC ".")
+
+set(SKPARAGRAPH_LIB_SRCS
+    "modules/skparagraph/src/Decorations.cpp"
+    "modules/skparagraph/src/Decorations.h"
+    "modules/skparagraph/src/FontArguments.cpp"
+    "modules/skparagraph/src/FontCollection.cpp"
+    "modules/skparagraph/src/Iterators.h"
+    "modules/skparagraph/src/OneLineShaper.cpp"
+    "modules/skparagraph/src/OneLineShaper.h"
+    "modules/skparagraph/src/ParagraphBuilderImpl.cpp"
+    "modules/skparagraph/src/ParagraphBuilderImpl.h"
+    "modules/skparagraph/src/ParagraphCache.cpp"
+    "modules/skparagraph/src/ParagraphImpl.cpp"
+    "modules/skparagraph/src/ParagraphImpl.h"
+    "modules/skparagraph/src/ParagraphPainterImpl.cpp"
+    "modules/skparagraph/src/ParagraphPainterImpl.h"
+    "modules/skparagraph/src/ParagraphStyle.cpp"
+    "modules/skparagraph/src/Run.cpp"
+    "modules/skparagraph/src/Run.h"
+    "modules/skparagraph/src/TextLine.cpp"
+    "modules/skparagraph/src/TextLine.h"
+    "modules/skparagraph/src/TextShadow.cpp"
+    "modules/skparagraph/src/TextStyle.cpp"
+    "modules/skparagraph/src/TextWrapper.cpp"
+    "modules/skparagraph/src/TextWrapper.h"
+    "modules/skparagraph/src/TypefaceFontProvider.cpp"
+)
+
+add_library(SkiaParagraph STATIC ${SKPARAGRAPH_LIB_SRCS})
+target_include_directories(SkiaParagraph PUBLIC ".")
+
+set(SKRESOURCES_LIB_SRCS
+    "modules/skresources/src/SkResources.cpp"
+    "modules/skresources/src/SkAnimCodecPlayer.cpp"
+    "modules/skresources/src/SkAnimCodecPlayer.h"
+)
+
+add_library(SkiaResources STATIC ${SKRESOURCES_LIB_SRCS})
+target_include_directories(SkiaResources PUBLIC ".")
+
+# We omit SkottieTool and SkottieTest as they are not needed for production code.
+set(SKOTTIE_LIB_SRCS
+    "modules/skottie/src/Adapter.h"
+    "modules/skottie/src/animator/Animator.cpp"
+    "modules/skottie/src/animator/Animator.h"
+    "modules/skottie/src/animator/KeyframeAnimator.cpp"
+    "modules/skottie/src/animator/KeyframeAnimator.h"
+    "modules/skottie/src/animator/ScalarKeyframeAnimator.cpp"
+    "modules/skottie/src/animator/ShapeKeyframeAnimator.cpp"
+    "modules/skottie/src/animator/TextKeyframeAnimator.cpp"
+    "modules/skottie/src/animator/Vec2KeyframeAnimator.cpp"
+    "modules/skottie/src/animator/VectorKeyframeAnimator.cpp"
+    "modules/skottie/src/animator/VectorKeyframeAnimator.h"
+    "modules/skottie/src/BlendModes.cpp"
+    "modules/skottie/src/Camera.cpp"
+    "modules/skottie/src/Camera.h"
+    "modules/skottie/src/Composition.cpp"
+    "modules/skottie/src/Composition.h"
+    "modules/skottie/src/effects/BlackAndWhiteEffect.cpp"
+    "modules/skottie/src/effects/BrightnessContrastEffect.cpp"
+    "modules/skottie/src/effects/BulgeEffect.cpp"
+    "modules/skottie/src/effects/CCTonerEffect.cpp"
+    "modules/skottie/src/effects/CornerPinEffect.cpp"
+    "modules/skottie/src/effects/DirectionalBlur.cpp"
+    "modules/skottie/src/effects/DisplacementMapEffect.cpp"
+    "modules/skottie/src/effects/DropShadowEffect.cpp"
+    "modules/skottie/src/effects/Effects.cpp"
+    "modules/skottie/src/effects/Effects.h"
+    "modules/skottie/src/effects/FillEffect.cpp"
+    "modules/skottie/src/effects/FractalNoiseEffect.cpp"
+    "modules/skottie/src/effects/GaussianBlurEffect.cpp"
+    "modules/skottie/src/effects/GlowStyles.cpp"
+    "modules/skottie/src/effects/GradientEffect.cpp"
+    "modules/skottie/src/effects/HueSaturationEffect.cpp"
+    "modules/skottie/src/effects/InvertEffect.cpp"
+    "modules/skottie/src/effects/LevelsEffect.cpp"
+    "modules/skottie/src/effects/LinearWipeEffect.cpp"
+    "modules/skottie/src/effects/MotionBlurEffect.cpp"
+    "modules/skottie/src/effects/MotionBlurEffect.h"
+    "modules/skottie/src/effects/MotionTileEffect.cpp"
+    "modules/skottie/src/effects/RadialWipeEffect.cpp"
+    "modules/skottie/src/effects/ShadowStyles.cpp"
+    "modules/skottie/src/effects/SharpenEffect.cpp"
+    "modules/skottie/src/effects/ShiftChannelsEffect.cpp"
+    "modules/skottie/src/effects/SkSLEffect.cpp"
+    "modules/skottie/src/effects/SphereEffect.cpp"
+    "modules/skottie/src/effects/ThresholdEffect.cpp"
+    "modules/skottie/src/effects/TintEffect.cpp"
+    "modules/skottie/src/effects/TransformEffect.cpp"
+    "modules/skottie/src/effects/TritoneEffect.cpp"
+    "modules/skottie/src/effects/VenetianBlindsEffect.cpp"
+    "modules/skottie/src/Layer.cpp"
+    "modules/skottie/src/Layer.h"
+    "modules/skottie/src/layers/AudioLayer.cpp"
+    "modules/skottie/src/layers/FootageLayer.cpp"
+    "modules/skottie/src/layers/NullLayer.cpp"
+    "modules/skottie/src/layers/PrecompLayer.cpp"
+    "modules/skottie/src/layers/shapelayer/Ellipse.cpp"
+    "modules/skottie/src/layers/shapelayer/FillStroke.cpp"
+    "modules/skottie/src/layers/shapelayer/Gradient.cpp"
+    "modules/skottie/src/layers/shapelayer/MergePaths.cpp"
+    "modules/skottie/src/layers/shapelayer/OffsetPaths.cpp"
+    "modules/skottie/src/layers/shapelayer/Polystar.cpp"
+    "modules/skottie/src/layers/shapelayer/PuckerBloat.cpp"
+    "modules/skottie/src/layers/shapelayer/Rectangle.cpp"
+    "modules/skottie/src/layers/shapelayer/Repeater.cpp"
+    "modules/skottie/src/layers/shapelayer/RoundCorners.cpp"
+    "modules/skottie/src/layers/shapelayer/ShapeLayer.cpp"
+    "modules/skottie/src/layers/shapelayer/ShapeLayer.h"
+    "modules/skottie/src/layers/shapelayer/TrimPaths.cpp"
+    "modules/skottie/src/layers/SolidLayer.cpp"
+    "modules/skottie/src/layers/TextLayer.cpp"
+    "modules/skottie/src/Path.cpp"
+    "modules/skottie/src/Skottie.cpp"
+    "modules/skottie/src/SkottieJson.cpp"
+    "modules/skottie/src/SkottieJson.h"
+    "modules/skottie/src/SkottiePriv.h"
+    "modules/skottie/src/SkottieProperty.cpp"
+    "modules/skottie/src/SkottieValue.h"
+    "modules/skottie/src/SlotManager.cpp"
+    "modules/skottie/src/text/Font.cpp"
+    "modules/skottie/src/text/Font.h"
+    "modules/skottie/src/text/RangeSelector.cpp"
+    "modules/skottie/src/text/RangeSelector.h"
+    "modules/skottie/src/text/TextAdapter.cpp"
+    "modules/skottie/src/text/TextAdapter.h"
+    "modules/skottie/src/text/TextAnimator.cpp"
+    "modules/skottie/src/text/TextAnimator.h"
+    "modules/skottie/src/text/TextShaper.cpp"
+    "modules/skottie/src/text/TextValue.cpp"
+    "modules/skottie/src/text/TextValue.h"
+    "modules/skottie/src/Transform.cpp"
+    "modules/skottie/src/Transform.h"
+
+    "modules/skottie/utils/SkottieUtils.cpp"
+    "modules/skottie/src/text/TextShaper.cpp"
+)
+
+add_library(SkiaSkottie STATIC ${SKOTTIE_LIB_SRCS})
+target_include_directories(SkiaSkottie PUBLIC ".")
+
+FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
+FetchContent_MakeAvailable(Corrosion)
+
+FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG icu@1.4.0)
+FetchContent_MakeAvailable(libicu4x)
+
+corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
+
+set(SKUNICODE_ICU_BUILTIN_SRCS
+    "modules/skunicode/src/SkUnicode.cpp"
+    "modules/skunicode/src/SkUnicode_icu4x.cpp"
+    # "modules/skunicode/src/SkUnicode_icupriv.h"
+    # "modules/skunicode/src/SkUnicode_icu_bidi.cpp"
+    # "modules/skunicode/src/SkUnicode_icu_bidi.h"
+    # "modules/skunicode/src/SkUnicode_icu_builtin.cpp"
+    # "modules/skunicode/src/SkBidiFactory_icu_full.cpp"
+    # "modules/skunicode/src/SkBidiFactory_icu_full.h"
+)
+
+# find_package(ICU COMPONENTS uc i18n REQUIRED)
+
+add_library(SkiaUnicode STATIC ${SKUNICODE_ICU_BUILTIN_SRCS})
+target_include_directories(SkiaUnicode PUBLIC "." "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include" "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include")
+target_link_libraries(SkiaUnicode PRIVATE "${CMAKE_BINARY_DIR}/libicu_capi_staticlib.a" "${CMAKE_BINARY_DIR}/libicu_freertos.a")
+
+message(STATUS "icu = ${icu}")
