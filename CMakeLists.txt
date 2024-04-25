@@ -2090,6 +2090,7 @@ set(SKPARAGRAPH_LIB_SRCS
 
 add_library(SkiaParagraph STATIC ${SKPARAGRAPH_LIB_SRCS})
 target_include_directories(SkiaParagraph PUBLIC ".")
+target_compile_definitions(SkiaParagraph PUBLIC -DSK_UNICODE_ICU4X_IMPLEMENTATION=1)
 
 set(SKRESOURCES_LIB_SRCS
     "modules/skresources/src/SkResources.cpp"
@@ -2204,7 +2205,8 @@ target_include_directories(SkiaSkottie PUBLIC ".")
 FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
 FetchContent_MakeAvailable(Corrosion)
 
-FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG icu@1.4.0)
+FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
+# FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG icu@1.4.0)
 FetchContent_MakeAvailable(libicu4x)
 
 corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
@@ -2226,4 +2228,28 @@ add_library(SkiaUnicode STATIC ${SKUNICODE_ICU_BUILTIN_SRCS})
 target_include_directories(SkiaUnicode PUBLIC "." "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include" "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include")
 target_link_libraries(SkiaUnicode PRIVATE "${CMAKE_BINARY_DIR}/libicu_capi_staticlib.a" "${CMAKE_BINARY_DIR}/libicu_freertos.a")
 
-message(STATUS "icu = ${icu}")
+ExternalProject_Add(libharfbuzz
+    GIT_REPOSITORY    https://github.com/harfbuzz/harfbuzz.git
+    GIT_TAG           8.4.0
+    SOURCE_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-src"
+    BINARY_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-build"
+    # CONFIGURE_COMMAND ""
+    # BUILD_COMMAND     ""
+    INSTALL_COMMAND   ""
+    TEST_COMMAND      ""
+    # CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
+)
+
+set(SKSHAPER_HARFBUZZ_SRCS
+    "modules/skshaper/src/SkShaper.cpp"
+    "modules/skshaper/src/SkShaper_factory.cpp"
+    "modules/skshaper/src/SkShaper_harfbuzz.cpp"
+    "modules/skshaper/src/SkShaper_primitive.cpp"
+    "modules/skshaper/src/SkShaper_skunicode.cpp"
+)
+
+add_library(SkiaShaper STATIC ${SKSHAPER_HARFBUZZ_SRCS})
+add_dependencies(SkiaShaper libharfbuzz)
+target_include_directories(SkiaShaper PUBLIC "." "${CMAKE_BINARY_DIR}/libharfbuzz-src/src" "${CMAKE_BINARY_DIR}/libharfbuzz-build")
+target_link_libraries (SkiaShaper PRIVATE harfbuzz)
+target_compile_definitions(SkiaShaper PUBLIC -DSK_UNICODE_ICU4X_IMPLEMENTATION=1 -DSK_SHAPER_UNICODE_AVAILABLE=1 -DSK_SHAPER_HARFBUZZ_AVAILABLE=1)
