@@ -2253,3 +2253,82 @@ add_dependencies(SkiaShaper libharfbuzz)
 target_include_directories(SkiaShaper PUBLIC "." "${CMAKE_BINARY_DIR}/libharfbuzz-src/src" "${CMAKE_BINARY_DIR}/libharfbuzz-build")
 target_link_libraries (SkiaShaper PRIVATE harfbuzz)
 target_compile_definitions(SkiaShaper PUBLIC -DSK_UNICODE_ICU4X_IMPLEMENTATION=1 -DSK_SHAPER_UNICODE_AVAILABLE=1 -DSK_SHAPER_HARFBUZZ_AVAILABLE=1)
+
+
+set(SVG_LIB_SRCS
+    "modules/svg/src/SkSVGAttribute.cpp"
+    "modules/svg/src/SkSVGAttributeParser.cpp"
+    "modules/svg/src/SkSVGCircle.cpp"
+    "modules/svg/src/SkSVGClipPath.cpp"
+    "modules/svg/src/SkSVGContainer.cpp"
+    "modules/svg/src/SkSVGDOM.cpp"
+    "modules/svg/src/SkSVGEllipse.cpp"
+    "modules/svg/src/SkSVGFeBlend.cpp"
+    "modules/svg/src/SkSVGFeColorMatrix.cpp"
+    "modules/svg/src/SkSVGFeComposite.cpp"
+    "modules/svg/src/SkSVGFe.cpp"
+    "modules/svg/src/SkSVGFeDisplacementMap.cpp"
+    "modules/svg/src/SkSVGFeFlood.cpp"
+    "modules/svg/src/SkSVGFeGaussianBlur.cpp"
+    "modules/svg/src/SkSVGFeImage.cpp"
+    "modules/svg/src/SkSVGFeLighting.cpp"
+    "modules/svg/src/SkSVGFeLightSource.cpp"
+    "modules/svg/src/SkSVGFeMorphology.cpp"
+    "modules/svg/src/SkSVGFeOffset.cpp"
+    "modules/svg/src/SkSVGFeTurbulence.cpp"
+    "modules/svg/src/SkSVGFilterContext.cpp"
+    "modules/svg/src/SkSVGFilter.cpp"
+    "modules/svg/src/SkSVGGradient.cpp"
+    "modules/svg/src/SkSVGImage.cpp"
+    "modules/svg/src/SkSVGLine.cpp"
+    "modules/svg/src/SkSVGLinearGradient.cpp"
+    "modules/svg/src/SkSVGMask.cpp"
+    "modules/svg/src/SkSVGNode.cpp"
+    "modules/svg/src/SkSVGOpenTypeSVGDecoder.cpp"
+    "modules/svg/src/SkSVGPath.cpp"
+    "modules/svg/src/SkSVGPattern.cpp"
+    "modules/svg/src/SkSVGPoly.cpp"
+    "modules/svg/src/SkSVGRadialGradient.cpp"
+    "modules/svg/src/SkSVGRect.cpp"
+    "modules/svg/src/SkSVGRenderContext.cpp"
+    "modules/svg/src/SkSVGShape.cpp"
+    "modules/svg/src/SkSVGStop.cpp"
+    "modules/svg/src/SkSVGSVG.cpp"
+    "modules/svg/src/SkSVGText.cpp"
+    "modules/svg/src/SkSVGTextPriv.h"
+    "modules/svg/src/SkSVGTransformableNode.cpp"
+    "modules/svg/src/SkSVGUse.cpp"
+    "modules/svg/src/SkSVGValue.cpp"
+)
+
+add_library(SkiaSVG STATIC ${SVG_LIB_SRCS})
+target_include_directories(SkiaSVG PUBLIC ".")
+
+set(XML_SRCS
+    "src/xml/SkDOM.cpp"
+    "src/xml/SkXMLParser.cpp"
+    "src/xml/SkXMLWriter.cpp"
+)
+
+add_library(SkiaXML STATIC ${XML_SRCS})
+target_include_directories(SkiaXML PUBLIC ".")
+
+add_library(skia STATIC CMakeLists_SkiaEmpty.cpp)
+target_link_libraries(skia PUBLIC
+    SkiaBase
+    SkiaCodec
+    SkiaEncode
+    SkiaJpeg
+    SkiaMetal
+    SkiaParagraph
+    SkiaPng
+    SkiaPort
+    SkiaResources
+    SkiaSG
+    SkiaShaper
+    SkiaSkottie
+    SkiaSVG
+    SkiaUnicode
+    SkiaWebp
+    SkiaXML
+)
