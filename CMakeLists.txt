@@ -1971,14 +1971,15 @@ set(SKOTTIE_LIB_SRCS
 add_library(SkiaSkottie STATIC ${SKOTTIE_LIB_SRCS})
 target_include_directories(SkiaSkottie PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-message(STATUS "Rust_TOOLCHAIN = ${Rust_TOOLCHAIN}")
-
-if (NOT DEFINED Rust_TOOLCHAIN)
-    message(STATUS "Rust_TOOLCHAIN is not defined!")
-endif()
+message(STATUS "(Predefined) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN} (should be automatically detected unless forced externally)")
+message(STATUS "(Predefined) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
 
 FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
 FetchContent_MakeAvailable(Corrosion)
+
+message(STATUS "(Corrosion) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN}")
+message(STATUS "(Corrosion) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
+
 FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
 FetchContent_MakeAvailable(libicu4x)
 corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
