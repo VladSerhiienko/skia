@@ -10,228 +10,22 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
-set(SKIA_PUBLIC_HDRS
-    "include/android/SkAndroidFrameworkUtils.h"
-    "include/android/SkAnimatedImage.h"
-    "include/codec/SkAndroidCodec.h"
-    "include/codec/SkAvifDecoder.h"
-    "include/codec/SkBmpDecoder.h"
-    "include/codec/SkCodecAnimation.h"
-    "include/codec/SkCodec.h"
-    "include/codec/SkEncodedImageFormat.h"
-    "include/codec/SkEncodedOrigin.h"
-    "include/codec/SkGifDecoder.h"
-    "include/codec/SkIcoDecoder.h"
-    "include/codec/SkJpegDecoder.h"
-    "include/codec/SkJpegxlDecoder.h"
-    "include/codec/SkPixmapUtils.h"
-    "include/codec/SkPngChunkReader.h"
-    "include/codec/SkPngDecoder.h"
-    "include/codec/SkRawDecoder.h"
-    "include/codec/SkWbmpDecoder.h"
-    "include/codec/SkWebpDecoder.h"
-    "include/config/SkUserConfig.h"
-    "include/core/SkAlphaType.h"
-    "include/core/SkAnnotation.h"
-    "include/core/SkArc.h"
-    "include/core/SkBBHFactory.h"
-    "include/core/SkBitmap.h"
-    "include/core/SkBlendMode.h"
-    "include/core/SkBlender.h"
-    "include/core/SkBlurTypes.h"
-    "include/core/SkCanvas.h"
-    "include/core/SkCanvasVirtualEnforcer.h"
-    "include/core/SkCapabilities.h"
-    "include/core/SkClipOp.h"
-    "include/core/SkColor.h"
-    "include/core/SkColorFilter.h"
-    "include/core/SkColorPriv.h"
-    "include/core/SkColorSpace.h"
-    "include/core/SkColorTable.h"
-    "include/core/SkColorType.h"
-    "include/core/SkContourMeasure.h"
-    "include/core/SkCoverageMode.h"
-    "include/core/SkCubicMap.h"
-    "include/core/SkData.h"
-    "include/core/SkDataTable.h"
-    "include/core/SkDocument.h"
-    "include/core/SkDrawable.h"
-    "include/core/SkExecutor.h"
-    "include/core/SkFlattenable.h"
-    "include/core/SkFont.h"
-    "include/core/SkFontArguments.h"
-    "include/core/SkFontMetrics.h"
-    "include/core/SkFontMgr.h"
-    "include/core/SkFontParameters.h"
-    "include/core/SkFontStyle.h"
-    "include/core/SkFontTypes.h"
-    "include/core/SkGraphics.h"
-    "include/core/SkImage.h"
-    "include/core/SkImageFilter.h"
-    "include/core/SkImageGenerator.h"
-    "include/core/SkImageInfo.h"
-    "include/core/SkM44.h"
-    "include/core/SkMallocPixelRef.h"
-    "include/core/SkMaskFilter.h"
-    "include/core/SkMatrix.h"
-    "include/core/SkMesh.h"
-    "include/core/SkMilestone.h"
-    "include/core/SkOverdrawCanvas.h"
-    "include/core/SkPaint.h"
-    "include/core/SkPath.h"
-    "include/core/SkPathBuilder.h"
-    "include/core/SkPathEffect.h"
-    "include/core/SkPathMeasure.h"
-    "include/core/SkPathTypes.h"
-    "include/core/SkPathUtils.h"
-    "include/core/SkPicture.h"
-    "include/core/SkPictureRecorder.h"
-    "include/core/SkPixelRef.h"
-    "include/core/SkPixmap.h"
-    "include/core/SkPoint.h"
-    "include/core/SkPoint3.h"
-    "include/core/SkRRect.h"
-    "include/core/SkRSXform.h"
-    "include/core/SkRasterHandleAllocator.h"
-    "include/core/SkRect.h"
-    "include/core/SkRefCnt.h"
-    "include/core/SkRegion.h"
-    "include/core/SkSamplingOptions.h"
-    "include/core/SkScalar.h"
-    "include/core/SkSerialProcs.h"
-    "include/core/SkShader.h"
-    "include/core/SkSize.h"
-    "include/core/SkSpan.h"
-    "include/core/SkStream.h"
-    "include/core/SkString.h"
-    "include/core/SkStrokeRec.h"
-    "include/core/SkSurface.h"
-    "include/core/SkSurfaceProps.h"
-    "include/core/SkSwizzle.h"
-    "include/core/SkTextBlob.h"
-    "include/core/SkTextureCompressionType.h"
-    "include/core/SkTiledImageUtils.h"
-    "include/core/SkTileMode.h"
-    "include/core/SkTraceMemoryDump.h"
-    "include/core/SkTypeface.h"
-    "include/core/SkTypes.h"
-    "include/core/SkUnPreMultiply.h"
-    "include/core/SkVertices.h"
-    "include/core/SkYUVAInfo.h"
-    "include/core/SkYUVAPixmaps.h"
-    "include/docs/SkMultiPictureDocument.h"
-    "include/docs/SkPDFDocument.h"
-    "include/docs/SkXPSDocument.h"
-    "include/effects/Sk1DPathEffect.h"
-    "include/effects/Sk2DPathEffect.h"
-    "include/effects/SkBlenders.h"
-    "include/effects/SkBlurMaskFilter.h"
-    "include/effects/SkColorMatrixFilter.h"
-    "include/effects/SkColorMatrix.h"
-    "include/effects/SkCornerPathEffect.h"
-    "include/effects/SkDashPathEffect.h"
-    "include/effects/SkDiscretePathEffect.h"
-    "include/effects/SkGradientShader.h"
-    "include/effects/SkHighContrastFilter.h"
-    "include/effects/SkImageFilters.h"
-    "include/effects/SkLumaColorFilter.h"
-    "include/effects/SkOverdrawColorFilter.h"
-    "include/effects/SkPerlinNoiseShader.h"
-    "include/effects/SkRuntimeEffect.h"
-    "include/effects/SkShaderMaskFilter.h"
-    "include/effects/SkTableMaskFilter.h"
-    "include/effects/SkTrimPathEffect.h"
-    "include/encode/SkEncoder.h"
-    "include/encode/SkICC.h"
-    "include/encode/SkJpegEncoder.h"
-    "include/encode/SkPngEncoder.h"
-    "include/encode/SkWebpEncoder.h"
-    "include/gpu/d3d/GrD3DBackendContext.h"
-    "include/gpu/d3d/GrD3DTypes.h"
-    "include/gpu/ganesh/GrExternalTextureGenerator.h"
-    "include/gpu/ganesh/SkImageGanesh.h"
-    "include/gpu/ganesh/SkMeshGanesh.h"
-    "include/gpu/ganesh/SkSurfaceGanesh.h"
-    "include/gpu/ganesh/gl/GrGLBackendSurface.h"
-    "include/gpu/ganesh/gl/GrGLDirectContext.h"
-    "include/gpu/ganesh/gl/egl/GrGLMakeEGLInterface.h"
-    "include/gpu/ganesh/gl/glx/GrGLMakeGLXInterface.h"
-    "include/gpu/ganesh/gl/ios/GrGLMakeIOSInterface.h"
-    "include/gpu/ganesh/gl/mac/GrGLMakeMacInterface.h"
-    "include/gpu/ganesh/mtl/GrMtlBackendContext.h"
-    "include/gpu/ganesh/mtl/GrMtlBackendSemaphore.h"
-    "include/gpu/ganesh/mtl/GrMtlBackendSurface.h"
-    "include/gpu/ganesh/mtl/GrMtlDirectContext.h"
-    "include/gpu/ganesh/mtl/GrMtlTypes.h"
-    "include/gpu/ganesh/mtl/SkSurfaceMetal.h"
-    "include/gpu/ganesh/vk/GrBackendDrawableInfo.h"
-    "include/gpu/ganesh/vk/GrVkBackendSemaphore.h"
-    "include/gpu/ganesh/vk/GrVkBackendSurface.h"
-    "include/gpu/ganesh/vk/GrVkDirectContext.h"
-    "include/gpu/gl/GrGLAssembleHelpers.h"
-    "include/gpu/gl/GrGLAssembleInterface.h"
-    "include/gpu/gl/GrGLConfig.h"
-    "include/gpu/gl/GrGLConfig_chrome.h"
-    "include/gpu/gl/egl/GrGLMakeEGLInterface.h"
-    "include/gpu/gl/glx/GrGLMakeGLXInterface.h"
-    "include/gpu/GpuTypes.h"
-    "include/gpu/GrBackendSemaphore.h"
-    "include/gpu/GrBackendSurface.h"
-    "include/gpu/GrContextOptions.h"
-    "include/gpu/GrContextThreadSafeProxy.h"
-    "include/gpu/GrDirectContext.h"
-    "include/gpu/GrDriverBugWorkarounds.h"
-    "include/gpu/GrDriverBugWorkaroundsAutogen.h"
-    "include/gpu/GrRecordingContext.h"
-    "include/gpu/GrTypes.h"
-    "include/gpu/GrYUVABackendTextures.h"
-    "include/gpu/MutableTextureState.h"
-    "include/gpu/ShaderErrorHandler.h"
-    "include/gpu/gl/GrGLExtensions.h"
-    "include/gpu/gl/GrGLFunctions.h"
-    "include/gpu/gl/GrGLInterface.h"
-    "include/gpu/gl/GrGLTypes.h"
-    "include/gpu/mock/GrMockTypes.h"
-    "include/gpu/mtl/MtlMemoryAllocator.h"
-    "include/gpu/vk/GrVkBackendContext.h"
-    "include/gpu/vk/GrVkExtensions.h"
-    "include/gpu/vk/GrVkMemoryAllocator.h"
-    "include/gpu/vk/GrVkTypes.h"
-    "include/gpu/vk/VulkanExtensions.h"
-    "include/gpu/vk/VulkanMemoryAllocator.h"
-    "include/gpu/vk/VulkanMutableTextureState.h"
-    "include/gpu/vk/VulkanTypes.h"
-    "include/pathops/SkPathOps.h"
-    "include/ports/SkCFObject.h"
-    "include/ports/SkFontMgr_android.h"
-    "include/ports/SkFontMgr_data.h"
-    "include/ports/SkFontMgr_directory.h"
-    "include/ports/SkFontMgr_empty.h"
-    "include/ports/SkFontMgr_fontconfig.h"
-    "include/ports/SkFontMgr_fuchsia.h"
-    "include/ports/SkFontMgr_mac_ct.h"
-    "include/ports/SkImageGeneratorCG.h"
-    "include/ports/SkImageGeneratorNDK.h"
-    "include/ports/SkImageGeneratorWIC.h"
-    "include/ports/SkTypeface_mac.h"
-    "include/ports/SkTypeface_win.h"
-    # We do not want clients to directly include our private headers, so we exclude include/private
-    "include/sksl/SkSLDebugTrace.h"
-    "include/sksl/SkSLVersion.h"
-    "include/utils/SkCanvasStateUtils.h"
-    "include/utils/SkCustomTypeface.h"
-    "include/utils/SkEventTracer.h"
-    "include/utils/SkNoDrawCanvas.h"
-    "include/utils/SkNullCanvas.h"
-    "include/utils/SkNWayCanvas.h"
-    "include/utils/SkOrderedFontMgr.h"
-    "include/utils/SkPaintFilterCanvas.h"
-    "include/utils/SkParse.h"
-    "include/utils/SkParsePath.h"
-    "include/utils/SkShadowUtils.h"
-    "include/utils/SkTextUtils.h"
-    "include/utils/SkTraceEventPhase.h"
-    "include/utils/mac/SkCGUtils.h"
+set(SKIA_ALL_DEFINITIONS
+    -DSK_BUILD_FOR_GOOGLE3=1
+    -DSK_GANESH=1
+    -DSK_GRAPHITE=1
+    -DSK_CODEC_DECODES_BMP=1
+    -DSK_CODEC_DECODES_WBMP=1
+    -DSK_CODEC_DECODES_PNG=1
+    -DSK_CODEC_DECODES_WEBP=1
+    -DSK_CODEC_DECODES_JPEG=1
+    -DSK_WEBP_ENCODER_USE_DEFAULT_METHOD=1
+    -DSK_USE_FREETYPE_EMBOLDEN=1
+    -DSK_FONTMGR_FREETYPE_DIRECTORY_AVAILABLE=1
+    -DSK_FONTMGR_FREETYPE_EMPTY_AVAILABLE=1
+    -DSK_UNICODE_ICU4X_IMPLEMENTATION=1
+    -DSK_SHAPER_UNICODE_AVAILABLE=1
+    -DSK_SHAPER_HARFBUZZ_AVAILABLE=1
 )
 
 set(BASE_SRCS_ALL
@@ -1770,8 +1564,8 @@ set(BASE_SRCS_ALL
 )
 
 add_library(SkiaBase STATIC ${BASE_SRCS_ALL})
-target_include_directories(SkiaBase PUBLIC ".")
-target_compile_definitions(SkiaBase PUBLIC -DSK_GANESH=1 -DSK_USE_FREETYPE_EMBOLDEN=1 -DSK_BUILD_FOR_GOOGLE3=1)
+target_include_directories(SkiaBase PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(SkiaBase PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(ENCODE_SRCS
     "src/encode/SkEncoder.cpp"
@@ -1782,7 +1576,7 @@ set(ENCODE_SRCS
 )
 
 add_library(SkiaEncode STATIC ${ENCODE_SRCS})
-target_include_directories(SkiaEncode PUBLIC ".")
+target_include_directories(SkiaEncode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 ExternalProject_Add(libjpeg
     GIT_REPOSITORY    https://github.com/libjpeg-turbo/libjpeg-turbo.git
@@ -1802,7 +1596,7 @@ set(ENCODE_JPEG_SRCS
 
 add_library(SkiaJpeg STATIC ${ENCODE_JPEG_SRCS})
 add_dependencies(SkiaJpeg libjpeg) 
-target_include_directories(SkiaJpeg PUBLIC "." "${CMAKE_BINARY_DIR}/libjpeg-turbo-src" "${CMAKE_BINARY_DIR}/libjpeg-turbo-build")
+target_include_directories(SkiaJpeg PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libjpeg-turbo-src" "${CMAKE_BINARY_DIR}/libjpeg-turbo-build")
 target_link_libraries (SkiaJpeg PRIVATE jpeg-static)
 
 ExternalProject_Add(libwebp
@@ -1820,9 +1614,9 @@ set(ENCODE_WEBP_SRCS
 
 add_library(SkiaWebp STATIC ${ENCODE_WEBP_SRCS})
 add_dependencies(SkiaWebp libwebp) 
-target_include_directories(SkiaWebp PUBLIC "." "${CMAKE_BINARY_DIR}/libwebp-src/src" "${CMAKE_BINARY_DIR}/libwebp-build")
+target_include_directories(SkiaWebp PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libwebp-src/src" "${CMAKE_BINARY_DIR}/libwebp-build")
 target_link_libraries (SkiaWebp PRIVATE webp)
-target_compile_definitions(SkiaWebp PUBLIC -DSK_WEBP_ENCODER_USE_DEFAULT_METHOD=1)
+target_compile_definitions(SkiaWebp PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 ExternalProject_Add(libpng
     GIT_REPOSITORY    https://github.com/pnggroup/libpng.git
@@ -1840,7 +1634,7 @@ set(ENCODE_PNG_SRCS
 
 add_library(SkiaPng STATIC ${ENCODE_PNG_SRCS})
 add_dependencies(SkiaPng libpng) 
-target_include_directories(SkiaPng PUBLIC "." "${CMAKE_BINARY_DIR}/libpng-src" "${CMAKE_BINARY_DIR}/libpng-build")
+target_include_directories(SkiaPng PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libpng-src" "${CMAKE_BINARY_DIR}/libpng-build")
 target_link_libraries (SkiaPng PRIVATE png_static)
 
 set(CODEC_SRCS_LIMITED
@@ -1914,87 +1708,52 @@ ExternalProject_Add(wuffs
 
 add_library(SkiaCodec STATIC ${CODEC_SRCS_LIMITED})
 add_dependencies(SkiaCodec wuffs) 
-target_include_directories(SkiaCodec PUBLIC "." "${CMAKE_BINARY_DIR}/wuffs-src/release/c")
+target_include_directories(SkiaCodec PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/wuffs-src/release/c")
 target_link_libraries (SkiaCodec PRIVATE SkiaJpeg SkiaWebp SkiaPng)
-target_compile_definitions(SkiaCodec PUBLIC
-    -DSK_CODEC_DECODES_BMP=1
-    -DSK_CODEC_DECODES_WBMP=1
-    -DSK_CODEC_DECODES_PNG=1
-    -DSK_CODEC_DECODES_WEBP=1
-    -DSK_CODEC_DECODES_JPEG=1)
+target_compile_definitions(SkiaCodec PUBLIC ${SKIA_ALL_DEFINITIONS})
 
-set(MTL_HDRS
-    "src/gpu/ganesh/mtl/GrMtlAttachment.h"
-    "src/gpu/ganesh/mtl/GrMtlBuffer.h"
-    "src/gpu/ganesh/mtl/GrMtlCaps.h"
-    "src/gpu/ganesh/mtl/GrMtlCommandBuffer.h"
-    "src/gpu/ganesh/mtl/GrMtlCppUtil.h"
-    "src/gpu/ganesh/mtl/GrMtlDepthStencil.h"
-    "src/gpu/ganesh/mtl/GrMtlFramebuffer.h"
-    "src/gpu/ganesh/mtl/GrMtlGpu.h"
-    "src/gpu/ganesh/mtl/GrMtlOpsRenderPass.h"
-    "src/gpu/ganesh/mtl/GrMtlPipeline.h"
-    "src/gpu/ganesh/mtl/GrMtlPipelineState.h"
-    "src/gpu/ganesh/mtl/GrMtlPipelineStateBuilder.h"
-    "src/gpu/ganesh/mtl/GrMtlPipelineStateDataManager.h"
-    "src/gpu/ganesh/mtl/GrMtlRenderCommandEncoder.h"
-    "src/gpu/ganesh/mtl/GrMtlRenderTarget.h"
-    "src/gpu/ganesh/mtl/GrMtlResourceProvider.h"
-    "src/gpu/ganesh/mtl/GrMtlSampler.h"
-    "src/gpu/ganesh/mtl/GrMtlSemaphore.h"
-    "src/gpu/ganesh/mtl/GrMtlTexture.h"
-    "src/gpu/ganesh/mtl/GrMtlTextureRenderTarget.h"
-    "src/gpu/ganesh/mtl/GrMtlTrampoline.h"
-    "src/gpu/ganesh/mtl/GrMtlUniformHandler.h"
-    "src/gpu/ganesh/mtl/GrMtlUtil.h"
-    "src/gpu/ganesh/mtl/GrMtlVaryingHandler.h"
-    "src/gpu/mtl/MtlMemoryAllocatorImpl.h"
-)
+# set(MTL_SRCS
+#     "src/gpu/ganesh/mtl/GrMtlAttachment.mm"
+#     "src/gpu/ganesh/mtl/GrMtlBackendSemaphore.mm"
+#     "src/gpu/ganesh/mtl/GrMtlBackendSurface.mm"
+#     "src/gpu/ganesh/mtl/GrMtlBuffer.mm"
+#     "src/gpu/ganesh/mtl/GrMtlCaps.mm"
+#     "src/gpu/ganesh/mtl/GrMtlCommandBuffer.mm"
+#     "src/gpu/ganesh/mtl/GrMtlDepthStencil.mm"
+#     "src/gpu/ganesh/mtl/GrMtlDirectContext.mm"
+#     "src/gpu/ganesh/mtl/GrMtlFramebuffer.mm"
+#     "src/gpu/ganesh/mtl/GrMtlGpu.mm"
+#     "src/gpu/ganesh/mtl/GrMtlOpsRenderPass.mm"
+#     "src/gpu/ganesh/mtl/GrMtlPipelineState.mm"
+#     "src/gpu/ganesh/mtl/GrMtlPipelineStateBuilder.mm"
+#     "src/gpu/ganesh/mtl/GrMtlPipelineStateDataManager.mm"
+#     "src/gpu/ganesh/mtl/GrMtlRenderTarget.mm"
+#     "src/gpu/ganesh/mtl/GrMtlResourceProvider.mm"
+#     "src/gpu/ganesh/mtl/GrMtlSampler.mm"
+#     "src/gpu/ganesh/mtl/GrMtlSemaphore.mm"
+#     "src/gpu/ganesh/mtl/GrMtlTexture.mm"
+#     "src/gpu/ganesh/mtl/GrMtlTextureRenderTarget.mm"
+#     "src/gpu/ganesh/mtl/GrMtlTrampoline.mm"
+#     "src/gpu/ganesh/mtl/GrMtlTypesPriv.h"
+#     "src/gpu/ganesh/mtl/GrMtlTypesPriv.mm"
+#     "src/gpu/ganesh/mtl/GrMtlUniformHandler.mm"
+#     "src/gpu/ganesh/mtl/GrMtlUtil.mm"
+#     "src/gpu/ganesh/mtl/GrMtlVaryingHandler.mm"
+#     "src/gpu/ganesh/surface/SkSurface_GaneshMtl.mm"
+#     "src/gpu/mtl/MtlMemoryAllocatorImpl.mm"
+#     "src/gpu/mtl/MtlUtils.mm"
+#     "src/gpu/mtl/MtlUtilsPriv.h"
+# )
 
-set(MTL_SRCS
-    "src/gpu/ganesh/mtl/GrMtlAttachment.mm"
-    "src/gpu/ganesh/mtl/GrMtlBackendSemaphore.mm"
-    "src/gpu/ganesh/mtl/GrMtlBackendSurface.mm"
-    "src/gpu/ganesh/mtl/GrMtlBuffer.mm"
-    "src/gpu/ganesh/mtl/GrMtlCaps.mm"
-    "src/gpu/ganesh/mtl/GrMtlCommandBuffer.mm"
-    "src/gpu/ganesh/mtl/GrMtlDepthStencil.mm"
-    "src/gpu/ganesh/mtl/GrMtlDirectContext.mm"
-    "src/gpu/ganesh/mtl/GrMtlFramebuffer.mm"
-    "src/gpu/ganesh/mtl/GrMtlGpu.mm"
-    "src/gpu/ganesh/mtl/GrMtlOpsRenderPass.mm"
-    "src/gpu/ganesh/mtl/GrMtlPipelineState.mm"
-    "src/gpu/ganesh/mtl/GrMtlPipelineStateBuilder.mm"
-    "src/gpu/ganesh/mtl/GrMtlPipelineStateDataManager.mm"
-    "src/gpu/ganesh/mtl/GrMtlRenderTarget.mm"
-    "src/gpu/ganesh/mtl/GrMtlResourceProvider.mm"
-    "src/gpu/ganesh/mtl/GrMtlSampler.mm"
-    "src/gpu/ganesh/mtl/GrMtlSemaphore.mm"
-    "src/gpu/ganesh/mtl/GrMtlTexture.mm"
-    "src/gpu/ganesh/mtl/GrMtlTextureRenderTarget.mm"
-    "src/gpu/ganesh/mtl/GrMtlTrampoline.mm"
-    "src/gpu/ganesh/mtl/GrMtlTypesPriv.h"
-    "src/gpu/ganesh/mtl/GrMtlTypesPriv.mm"
-    "src/gpu/ganesh/mtl/GrMtlUniformHandler.mm"
-    "src/gpu/ganesh/mtl/GrMtlUtil.mm"
-    "src/gpu/ganesh/mtl/GrMtlVaryingHandler.mm"
-    "src/gpu/ganesh/surface/SkSurface_GaneshMtl.mm"
-    "src/gpu/mtl/MtlMemoryAllocatorImpl.mm"
-    "src/gpu/mtl/MtlUtils.mm"
-    "src/gpu/mtl/MtlUtilsPriv.h"
-)
-
-add_library(SkiaMetal STATIC ${MTL_SRCS})
-target_include_directories(SkiaMetal PUBLIC ".")
-set_property (TARGET SkiaMetal APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
+# add_library(SkiaMetal STATIC ${MTL_SRCS})
+# target_include_directories(SkiaMetal PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+# set_property (TARGET SkiaMetal APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
 
 ExternalProject_Add(libfreetype
     GIT_REPOSITORY    https://github.com/freetype/freetype.git
     GIT_TAG           VER-2-13-2
     SOURCE_DIR        "${CMAKE_BINARY_DIR}/freetype-src"
     BINARY_DIR        "${CMAKE_BINARY_DIR}/freetype-build"
-    # CONFIGURE_COMMAND ""
-    # BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
     CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
@@ -2022,13 +1781,10 @@ set(PORTS_SRCS_UNIX
 
 add_library(SkiaPort STATIC ${PORTS_SRCS_UNIX})
 add_dependencies(SkiaPort libfreetype) 
-target_include_directories(SkiaPort PUBLIC "." "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
+target_include_directories(SkiaPort PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
 target_link_libraries (SkiaPort PRIVATE freetype)
 target_compile_definitions(SkiaPort PUBLIC -DSK_BUILD_FOR_GOOGLE3=1)
-target_compile_definitions(SkiaPort PUBLIC
-    -DSK_FONTMGR_FREETYPE_DIRECTORY_AVAILABLE=1
-    -DSK_FONTMGR_FREETYPE_EMPTY_AVAILABLE=1
-)
+target_compile_definitions(SkiaPort PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(SKSG_LIB_SRCS
     "modules/sksg/src/SkSGClipEffect.cpp"
@@ -2059,7 +1815,7 @@ set(SKSG_LIB_SRCS
 )
 
 add_library(SkiaSG STATIC ${SKSG_LIB_SRCS})
-target_include_directories(SkiaSG PUBLIC ".")
+target_include_directories(SkiaSG PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(SKPARAGRAPH_LIB_SRCS
     "modules/skparagraph/src/Decorations.cpp"
@@ -2089,8 +1845,8 @@ set(SKPARAGRAPH_LIB_SRCS
 )
 
 add_library(SkiaParagraph STATIC ${SKPARAGRAPH_LIB_SRCS})
-target_include_directories(SkiaParagraph PUBLIC ".")
-target_compile_definitions(SkiaParagraph PUBLIC -DSK_UNICODE_ICU4X_IMPLEMENTATION=1)
+target_include_directories(SkiaParagraph PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(SkiaParagraph PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(SKRESOURCES_LIB_SRCS
     "modules/skresources/src/SkResources.cpp"
@@ -2099,9 +1855,8 @@ set(SKRESOURCES_LIB_SRCS
 )
 
 add_library(SkiaResources STATIC ${SKRESOURCES_LIB_SRCS})
-target_include_directories(SkiaResources PUBLIC ".")
+target_include_directories(SkiaResources PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-# We omit SkottieTool and SkottieTest as they are not needed for production code.
 set(SKOTTIE_LIB_SRCS
     "modules/skottie/src/Adapter.h"
     "modules/skottie/src/animator/Animator.cpp"
@@ -2194,50 +1949,44 @@ set(SKOTTIE_LIB_SRCS
     "modules/skottie/src/text/TextValue.h"
     "modules/skottie/src/Transform.cpp"
     "modules/skottie/src/Transform.h"
-
     "modules/skottie/utils/SkottieUtils.cpp"
     "modules/skottie/src/text/TextShaper.cpp"
 )
 
 add_library(SkiaSkottie STATIC ${SKOTTIE_LIB_SRCS})
-target_include_directories(SkiaSkottie PUBLIC ".")
+target_include_directories(SkiaSkottie PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
 FetchContent_MakeAvailable(Corrosion)
-
 FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
-# FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG icu@1.4.0)
 FetchContent_MakeAvailable(libicu4x)
-
 corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
 
 set(SKUNICODE_ICU_BUILTIN_SRCS
     "modules/skunicode/src/SkUnicode.cpp"
     "modules/skunicode/src/SkUnicode_icu4x.cpp"
-    # "modules/skunicode/src/SkUnicode_icupriv.h"
-    # "modules/skunicode/src/SkUnicode_icu_bidi.cpp"
-    # "modules/skunicode/src/SkUnicode_icu_bidi.h"
-    # "modules/skunicode/src/SkUnicode_icu_builtin.cpp"
-    # "modules/skunicode/src/SkBidiFactory_icu_full.cpp"
-    # "modules/skunicode/src/SkBidiFactory_icu_full.h"
 )
 
-# find_package(ICU COMPONENTS uc i18n REQUIRED)
-
 add_library(SkiaUnicode STATIC ${SKUNICODE_ICU_BUILTIN_SRCS})
-target_include_directories(SkiaUnicode PUBLIC "." "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include" "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include")
-target_link_libraries(SkiaUnicode PRIVATE "${CMAKE_BINARY_DIR}/libicu_capi_staticlib.a" "${CMAKE_BINARY_DIR}/libicu_freertos.a")
+target_include_directories(SkiaUnicode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include"
+    "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include"
+)
+
+target_link_libraries(SkiaUnicode PRIVATE
+    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/aarch64-apple-darwin/debug/libicu_capi_staticlib.a"
+    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/aarch64-apple-darwin/debug/libicu_freertos.a"
+    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/aarch64-apple-darwin/debug/libicu_capi_staticlib.a"
+    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/aarch64-apple-darwin/debug/libicu_freertos.a"
+)
 
 ExternalProject_Add(libharfbuzz
     GIT_REPOSITORY    https://github.com/harfbuzz/harfbuzz.git
     GIT_TAG           8.4.0
     SOURCE_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-src"
     BINARY_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-build"
-    # CONFIGURE_COMMAND ""
-    # BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
-    # CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
 )
 
 set(SKSHAPER_HARFBUZZ_SRCS
@@ -2250,10 +1999,14 @@ set(SKSHAPER_HARFBUZZ_SRCS
 
 add_library(SkiaShaper STATIC ${SKSHAPER_HARFBUZZ_SRCS})
 add_dependencies(SkiaShaper libharfbuzz)
-target_include_directories(SkiaShaper PUBLIC "." "${CMAKE_BINARY_DIR}/libharfbuzz-src/src" "${CMAKE_BINARY_DIR}/libharfbuzz-build")
-target_link_libraries (SkiaShaper PRIVATE harfbuzz)
-target_compile_definitions(SkiaShaper PUBLIC -DSK_UNICODE_ICU4X_IMPLEMENTATION=1 -DSK_SHAPER_UNICODE_AVAILABLE=1 -DSK_SHAPER_HARFBUZZ_AVAILABLE=1)
+target_include_directories(SkiaShaper PUBLIC
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_BINARY_DIR}/libharfbuzz-src/src"
+    "${CMAKE_BINARY_DIR}/libharfbuzz-build"
+)
 
+target_link_libraries (SkiaShaper PRIVATE harfbuzz)
+target_compile_definitions(SkiaShaper PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(SVG_LIB_SRCS
     "modules/svg/src/SkSVGAttribute.cpp"
@@ -2302,7 +2055,7 @@ set(SVG_LIB_SRCS
 )
 
 add_library(SkiaSVG STATIC ${SVG_LIB_SRCS})
-target_include_directories(SkiaSVG PUBLIC ".")
+target_include_directories(SkiaSVG PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(XML_SRCS
     "src/xml/SkDOM.cpp"
@@ -2311,7 +2064,104 @@ set(XML_SRCS
 )
 
 add_library(SkiaXML STATIC ${XML_SRCS})
-target_include_directories(SkiaXML PUBLIC ".")
+target_include_directories(SkiaXML PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
+set(GRAPHITE_SRCS
+    "src/gpu/graphite/Image_YUVA_Graphite.cpp"
+    "src/gpu/graphite/UniformManager.cpp"
+    "src/gpu/graphite/Caps.cpp"
+    "src/gpu/graphite/ClipStack_graphite.cpp"
+    "src/gpu/graphite/DrawList.cpp"
+    "src/gpu/graphite/GpuWorkSubmission.cpp"
+    "src/gpu/graphite/Image_Graphite.cpp"
+    "src/gpu/graphite/RuntimeEffectDictionary.cpp"
+    "src/gpu/graphite/GraphicsPipeline.cpp"
+    "src/gpu/graphite/ResourceCache.cpp"
+    "src/gpu/graphite/Resource.cpp"
+    "src/gpu/graphite/PaintParamsKey.cpp"
+    "src/gpu/graphite/ClientMappedBufferManager.cpp"
+    "src/gpu/graphite/ProxyCache.cpp"
+    "src/gpu/graphite/Context.cpp"
+    "src/gpu/graphite/PublicPrecompile.cpp"
+    "src/gpu/graphite/Precompile.cpp"
+    "src/gpu/graphite/YUVABackendTextures.cpp"
+    "src/gpu/graphite/PaintParams.cpp"
+    "src/gpu/graphite/BufferManager.cpp"
+    "src/gpu/graphite/Texture.cpp"
+    "src/gpu/graphite/TextureInfo.cpp"
+    "src/gpu/graphite/BackendSemaphore.cpp"
+    "src/gpu/graphite/SharedContext.cpp"
+    "src/gpu/graphite/Device.cpp"
+    "src/gpu/graphite/render/SDFTextRenderStep.cpp"
+    "src/gpu/graphite/render/TessellateWedgesRenderStep.cpp"
+    "src/gpu/graphite/render/TessellateStrokesRenderStep.cpp"
+    "src/gpu/graphite/render/GraphiteVertexFiller.cpp"
+    "src/gpu/graphite/render/CoverBoundsRenderStep.cpp"
+    "src/gpu/graphite/render/VerticesRenderStep.cpp"
+    "src/gpu/graphite/render/PerEdgeAAQuadRenderStep.cpp"
+    "src/gpu/graphite/render/RectBlurRenderStep.cpp"
+    "src/gpu/graphite/render/TessellateCurvesRenderStep.cpp"
+    "src/gpu/graphite/render/CoverageMaskRenderStep.cpp"
+    "src/gpu/graphite/render/AnalyticRRectRenderStep.cpp"
+    "src/gpu/graphite/render/BitmapTextRenderStep.cpp"
+    "src/gpu/graphite/render/MiddleOutFanRenderStep.cpp"
+    "src/gpu/graphite/Sampler.cpp"
+    "src/gpu/graphite/surface/Surface_AndroidFactories.cpp"
+    "src/gpu/graphite/BackendTexture.cpp"
+    "src/gpu/graphite/ImageFactories.cpp"
+    "src/gpu/graphite/DrawContext.cpp"
+    "src/gpu/graphite/QueueManager.cpp"
+    "src/gpu/graphite/PathAtlas.cpp"
+    "src/gpu/graphite/Buffer.cpp"
+    "src/gpu/graphite/GlobalCache.cpp"
+    "src/gpu/graphite/DrawAtlas.cpp"
+    "src/gpu/graphite/ResourceProvider.cpp"
+    "src/gpu/graphite/ComputePipeline.cpp"
+    "src/gpu/graphite/Recording.cpp"
+    "src/gpu/graphite/DrawPass.cpp"
+    "src/gpu/graphite/geom/RectBlurData.cpp"
+    "src/gpu/graphite/geom/IntersectionTree.cpp"
+    "src/gpu/graphite/geom/Transform.cpp"
+    "src/gpu/graphite/geom/Shape.cpp"
+    "src/gpu/graphite/compute/ComputeStep.cpp"
+    "src/gpu/graphite/compute/DispatchGroup.cpp"
+    "src/gpu/graphite/ComputePathAtlas.cpp"
+    "src/gpu/graphite/ContextUtils.cpp"
+    "src/gpu/graphite/RendererProvider.cpp"
+    "src/gpu/graphite/UploadBufferManager.cpp"
+    "src/gpu/graphite/AtlasProvider.cpp"
+    "src/gpu/graphite/Image_Base_Graphite.cpp"
+    "src/gpu/graphite/task/SynchronizeToCpuTask.cpp"
+    "src/gpu/graphite/task/DrawTask.cpp"
+    "src/gpu/graphite/task/ComputeTask.cpp"
+    "src/gpu/graphite/task/UploadTask.cpp"
+    "src/gpu/graphite/task/ClearBuffersTask.cpp"
+    "src/gpu/graphite/task/TaskList.cpp"
+    "src/gpu/graphite/task/RenderPassTask.cpp"
+    "src/gpu/graphite/task/CopyTask.cpp"
+    "src/gpu/graphite/ShaderCodeDictionary.cpp"
+    "src/gpu/graphite/TextureUtils.cpp"
+    "src/gpu/graphite/KeyContext.cpp"
+    "src/gpu/graphite/RasterPathAtlas.cpp"
+    "src/gpu/graphite/GraphiteResourceKey.cpp"
+    "src/gpu/graphite/RasterPathUtils.cpp"
+    "src/gpu/graphite/PipelineData.cpp"
+    "src/gpu/graphite/SpecialImage_Graphite.cpp"
+    "src/gpu/graphite/text/TextAtlasManager.cpp"
+    "src/gpu/graphite/Surface_Graphite.cpp"
+    "src/gpu/graphite/TextureProxy.cpp"
+    "src/gpu/graphite/DrawWriter.cpp"
+    "src/gpu/graphite/KeyHelpers.cpp"
+    "src/gpu/graphite/YUVATextureProxies.cpp"
+    "src/gpu/graphite/FactoryFunctions.cpp"
+    "src/gpu/graphite/Renderer.cpp"
+    "src/gpu/graphite/Recorder.cpp"
+    "src/gpu/graphite/CommandBuffer.cpp"
+)
+
+add_library(SkiaGraphite STATIC ${GRAPHITE_SRCS})
+target_include_directories(SkiaGraphite PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_compile_definitions(SkiaGraphite PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 add_library(skia STATIC CMakeLists_SkiaEmpty.cpp)
 target_link_libraries(skia PUBLIC
@@ -2319,7 +2169,8 @@ target_link_libraries(skia PUBLIC
     SkiaCodec
     SkiaEncode
     SkiaJpeg
-    SkiaMetal
+    # SkiaMetal
+    SkiaGraphite
     SkiaParagraph
     SkiaPng
     SkiaPort
