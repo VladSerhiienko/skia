@@ -1749,15 +1749,25 @@ target_compile_definitions(SkiaCodec PUBLIC ${SKIA_ALL_DEFINITIONS})
 # target_include_directories(SkiaMetal PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 # set_property (TARGET SkiaMetal APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
 
-ExternalProject_Add(libfreetype
-    GIT_REPOSITORY    https://github.com/freetype/freetype.git
-    GIT_TAG           VER-2-13-2
-    SOURCE_DIR        "${CMAKE_BINARY_DIR}/freetype-src"
-    BINARY_DIR        "${CMAKE_BINARY_DIR}/freetype-build"
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-    CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
-)
+if (DEFINED SKIA_FREETYPE_INCLUDE_DIRS)
+    message(STATUS "Freetype was provided externally:")
+    message(STATUS "SKIA_FREETYPE_INCLUDE_DIRS = ${SKIA_FREETYPE_INCLUDE_DIRS}")
+    message(STATUS "SKIA_FREETYPE_LIBRARY = ${SKIA_FREETYPE_LIBRARY} (if empty, link freetype to the final image)")
+else()
+    message(STATUS "Freetype will be downloaded from GitHub: VER-2-13-2")
+    ExternalProject_Add(libfreetype
+        GIT_REPOSITORY    https://github.com/freetype/freetype.git
+        GIT_TAG           VER-2-13-2
+        SOURCE_DIR        "${CMAKE_BINARY_DIR}/freetype-src"
+        BINARY_DIR        "${CMAKE_BINARY_DIR}/freetype-build"
+        INSTALL_COMMAND   ""
+        TEST_COMMAND      ""
+        CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
+    )
+    set(SKIA_FREETYPE_DEPENDENCY libfreetype)
+    set(SKIA_FREETYPE_LIBRARY freetype)
+    set(SKIA_FREETYPE_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
+endif()
 
 set(PORTS_SRCS_UNIX
     "src/ports/SkDebug_stdio.cpp"
@@ -1780,11 +1790,16 @@ set(PORTS_SRCS_UNIX
 )
 
 add_library(SkiaPort STATIC ${PORTS_SRCS_UNIX})
-add_dependencies(SkiaPort libfreetype) 
-target_include_directories(SkiaPort PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
-target_link_libraries (SkiaPort PRIVATE freetype)
-target_compile_definitions(SkiaPort PUBLIC -DSK_BUILD_FOR_GOOGLE3=1)
+target_include_directories(SkiaPort PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${SKIA_FREETYPE_INCLUDE_DIRS}")
 target_compile_definitions(SkiaPort PUBLIC ${SKIA_ALL_DEFINITIONS})
+
+if (DEFINED SKIA_FREETYPE_DEPENDENCY)
+    add_dependencies(SkiaPort ${SKIA_FREETYPE_DEPENDENCY}) 
+endif()
+
+if (DEFINED SKIA_FREETYPE_LIBRARY)
+    target_link_libraries (SkiaPort PRIVATE ${SKIA_FREETYPE_LIBRARY})
+endif()
 
 set(SKSG_LIB_SRCS
     "modules/sksg/src/SkSGClipEffect.cpp"
@@ -1956,6 +1971,12 @@ set(SKOTTIE_LIB_SRCS
 add_library(SkiaSkottie STATIC ${SKOTTIE_LIB_SRCS})
 target_include_directories(SkiaSkottie PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
+message(STATUS "Rust_TOOLCHAIN = ${Rust_TOOLCHAIN}")
+
+if (NOT DEFINED Rust_TOOLCHAIN)
+    message(STATUS "Rust_TOOLCHAIN is not defined!")
+endif()
+
 FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
 FetchContent_MakeAvailable(Corrosion)
 FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
@@ -1974,10 +1995,10 @@ target_include_directories(SkiaUnicode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
 target_link_libraries(SkiaUnicode PRIVATE
-    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/aarch64-apple-darwin/debug/libicu_capi_staticlib.a"
-    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/aarch64-apple-darwin/debug/libicu_freertos.a"
-    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/aarch64-apple-darwin/debug/libicu_capi_staticlib.a"
-    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/aarch64-apple-darwin/debug/libicu_freertos.a"
+    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
+    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
+    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
+    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
 )
 
 ExternalProject_Add(libharfbuzz
