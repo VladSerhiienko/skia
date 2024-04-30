@@ -1579,12 +1579,17 @@ add_library(SkiaEncode STATIC ${ENCODE_SRCS})
 target_include_directories(SkiaEncode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 ExternalProject_Add(libjpeg
-    GIT_REPOSITORY    https://github.com/libjpeg-turbo/libjpeg-turbo.git
-    GIT_TAG           3.0.2
+    GIT_REPOSITORY    https://github.com/VladSerhiienko/libjpeg-turbo.git
+    GIT_TAG           vserhiienko/minimal-cmake
     SOURCE_DIR        "${CMAKE_BINARY_DIR}/libjpeg-turbo-src"
     BINARY_DIR        "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
+    CMAKE_ARGS        -DENABLE_SHARED:BOOL=OFF
+                      -DENABLE_EXECUTABLES:BOOL=OFF
+                      -DWITH_FUZZ:BOOL=OFF
+                      -DWITH_TURBOJPEG:BOOL=OFF
+                      -DWITH_JAVA:BOOL=OFF
 )
 
 set(ENCODE_JPEG_SRCS
@@ -1606,6 +1611,20 @@ ExternalProject_Add(libwebp
     BINARY_DIR        "${CMAKE_BINARY_DIR}/libwebp-build"
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
+    CMAKE_ARGS        -DBUILD_SHARED_LIBS:BOOL=OFF
+                      -DWEBP_LINK_STATIC:BOOL=ON
+                      -DWEBP_BUILD_ANIM_UTILS:BOOL=OFF
+                      -DWEBP_BUILD_CWEBP:BOOL=OFF
+                      -DWEBP_BUILD_DWEBP:BOOL=OFF
+                      -DWEBP_BUILD_GIF2WEBP:BOOL=OFF
+                      -DWEBP_BUILD_IMG2WEBP:BOOL=OFF
+                      -DWEBP_BUILD_VWEBP:BOOL=OFF
+                      -DWEBP_BUILD_WEBPINFO:BOOL=OFF
+                      -DWEBP_BUILD_LIBWEBPMUX:BOOL=OFF
+                      -DWEBP_BUILD_WEBPMUX:BOOL=OFF
+                      -DWEBP_BUILD_EXTRAS:BOOL=OFF
+                      -DWEBP_BUILD_WEBP_JS:BOOL=OFF
+                      -DWEBP_USE_THREAD:BOOL=OFF
 )
 
 set(ENCODE_WEBP_SRCS
@@ -1625,6 +1644,11 @@ ExternalProject_Add(libpng
     BINARY_DIR        "${CMAKE_BINARY_DIR}/libpng-build"
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
+    CMAKE_ARGS        -DPNG_TOOLS:BOOL=OFF
+                      -DPNG_TESTS:BOOL=OFF
+                      -DPNG_SHARED:BOOL=OFF
+                      -DPNG_DEBUG_POSTFIX:STRING=""
+                      -DPNG_EXECUTABLES:BOOL=OFF
 )
 
 set(ENCODE_PNG_SRCS
