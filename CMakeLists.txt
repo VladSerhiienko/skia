@@ -8,7 +8,17 @@ set(CMAKE_DISABLE_PRECOMPILE_HEADERS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
+find_package(WebP REQUIRED)
+find_package(libjpeg-turbo REQUIRED)
+find_package(PNG REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(expat REQUIRED)
+find_package(freetype REQUIRED)
+find_package(stb REQUIRED)
+find_package(harfbuzz REQUIRED)
+find_package(ICU REQUIRED)
+find_package(expat REQUIRED)
 
 set(SKIA_ALL_DEFINITIONS
     -DSK_BUILD_FOR_GOOGLE3=1
@@ -23,9 +33,10 @@ set(SKIA_ALL_DEFINITIONS
     -DSK_USE_FREETYPE_EMBOLDEN=1
     -DSK_FONTMGR_FREETYPE_DIRECTORY_AVAILABLE=1
     -DSK_FONTMGR_FREETYPE_EMPTY_AVAILABLE=1
-    -DSK_UNICODE_ICU4X_IMPLEMENTATION=1
     -DSK_SHAPER_UNICODE_AVAILABLE=1
     -DSK_SHAPER_HARFBUZZ_AVAILABLE=1
+    # -DSK_UNICODE_ICU4X_IMPLEMENTATION=1
+    -DSK_UNICODE_ICU_IMPLEMENTATION=1
 )
 
 set(BASE_SRCS_ALL
@@ -1566,6 +1577,7 @@ set(BASE_SRCS_ALL
 add_library(SkiaBase STATIC ${BASE_SRCS_ALL})
 target_include_directories(SkiaBase PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(SkiaBase PUBLIC ${SKIA_ALL_DEFINITIONS})
+target_link_libraries (SkiaBase PUBLIC ZLIB::ZLIB)
 
 set(ENCODE_SRCS
     "src/encode/SkEncoder.cpp"
@@ -1578,20 +1590,6 @@ set(ENCODE_SRCS
 add_library(SkiaEncode STATIC ${ENCODE_SRCS})
 target_include_directories(SkiaEncode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-ExternalProject_Add(libjpeg
-    GIT_REPOSITORY    https://github.com/VladSerhiienko/libjpeg-turbo.git
-    GIT_TAG           vserhiienko/minimal-cmake
-    SOURCE_DIR        "${CMAKE_BINARY_DIR}/libjpeg-turbo-src"
-    BINARY_DIR        "${CMAKE_BINARY_DIR}/libjpeg-turbo-build"
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-    CMAKE_ARGS        -DENABLE_SHARED:BOOL=OFF
-                      -DENABLE_EXECUTABLES:BOOL=OFF
-                      -DWITH_FUZZ:BOOL=OFF
-                      -DWITH_TURBOJPEG:BOOL=OFF
-                      -DWITH_JAVA:BOOL=OFF
-)
-
 set(ENCODE_JPEG_SRCS
     "src/encode/SkJpegEncoderImpl.h"
     "src/encode/SkJpegEncoderImpl.cpp"
@@ -1600,56 +1598,18 @@ set(ENCODE_JPEG_SRCS
 )
 
 add_library(SkiaJpeg STATIC ${ENCODE_JPEG_SRCS})
-add_dependencies(SkiaJpeg libjpeg) 
-target_include_directories(SkiaJpeg PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libjpeg-turbo-src" "${CMAKE_BINARY_DIR}/libjpeg-turbo-build")
-target_link_libraries (SkiaJpeg PRIVATE jpeg-static)
-
-ExternalProject_Add(libwebp
-    GIT_REPOSITORY    https://github.com/webmproject/libwebp.git
-    GIT_TAG           v1.4.0
-    SOURCE_DIR        "${CMAKE_BINARY_DIR}/libwebp-src"
-    BINARY_DIR        "${CMAKE_BINARY_DIR}/libwebp-build"
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-    CMAKE_ARGS        -DBUILD_SHARED_LIBS:BOOL=OFF
-                      -DWEBP_LINK_STATIC:BOOL=ON
-                      -DWEBP_BUILD_ANIM_UTILS:BOOL=OFF
-                      -DWEBP_BUILD_CWEBP:BOOL=OFF
-                      -DWEBP_BUILD_DWEBP:BOOL=OFF
-                      -DWEBP_BUILD_GIF2WEBP:BOOL=OFF
-                      -DWEBP_BUILD_IMG2WEBP:BOOL=OFF
-                      -DWEBP_BUILD_VWEBP:BOOL=OFF
-                      -DWEBP_BUILD_WEBPINFO:BOOL=OFF
-                      -DWEBP_BUILD_LIBWEBPMUX:BOOL=OFF
-                      -DWEBP_BUILD_WEBPMUX:BOOL=OFF
-                      -DWEBP_BUILD_EXTRAS:BOOL=OFF
-                      -DWEBP_BUILD_WEBP_JS:BOOL=OFF
-                      -DWEBP_USE_THREAD:BOOL=OFF
-)
+target_include_directories(SkiaJpeg PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries (SkiaJpeg PUBLIC libjpeg-turbo::libjpeg-turbo)
+target_compile_definitions(SkiaJpeg PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(ENCODE_WEBP_SRCS
     "src/encode/SkWebpEncoderImpl.cpp"
 )
 
 add_library(SkiaWebp STATIC ${ENCODE_WEBP_SRCS})
-add_dependencies(SkiaWebp libwebp) 
 target_include_directories(SkiaWebp PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libwebp-src/src" "${CMAKE_BINARY_DIR}/libwebp-build")
-target_link_libraries (SkiaWebp PRIVATE webp)
+target_link_libraries (SkiaWebp PUBLIC libwebp::libwebp)
 target_compile_definitions(SkiaWebp PUBLIC ${SKIA_ALL_DEFINITIONS})
-
-ExternalProject_Add(libpng
-    GIT_REPOSITORY    https://github.com/pnggroup/libpng.git
-    GIT_TAG           v1.6.43
-    SOURCE_DIR        "${CMAKE_BINARY_DIR}/libpng-src"
-    BINARY_DIR        "${CMAKE_BINARY_DIR}/libpng-build"
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-    CMAKE_ARGS        -DPNG_TOOLS:BOOL=OFF
-                      -DPNG_TESTS:BOOL=OFF
-                      -DPNG_SHARED:BOOL=OFF
-                      -DPNG_DEBUG_POSTFIX:STRING=""
-                      -DPNG_EXECUTABLES:BOOL=OFF
-)
 
 set(ENCODE_PNG_SRCS
     "src/encode/SkPngEncoderImpl.cpp"
@@ -1657,9 +1617,9 @@ set(ENCODE_PNG_SRCS
 )
 
 add_library(SkiaPng STATIC ${ENCODE_PNG_SRCS})
-add_dependencies(SkiaPng libpng) 
 target_include_directories(SkiaPng PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/libpng-src" "${CMAKE_BINARY_DIR}/libpng-build")
-target_link_libraries (SkiaPng PRIVATE png_static)
+target_link_libraries (SkiaPng PUBLIC PNG::PNG)
+target_compile_definitions(SkiaPng PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(CODEC_SRCS_LIMITED
     "src/codec/SkAndroidCodec.cpp"
@@ -1773,24 +1733,20 @@ target_compile_definitions(SkiaCodec PUBLIC ${SKIA_ALL_DEFINITIONS})
 # target_include_directories(SkiaMetal PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 # set_property (TARGET SkiaMetal APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
 
-if (DEFINED SKIA_FREETYPE_INCLUDE_DIRS)
-    message(STATUS "Freetype was provided externally:")
-    message(STATUS "SKIA_FREETYPE_INCLUDE_DIRS = ${SKIA_FREETYPE_INCLUDE_DIRS}")
-    message(STATUS "SKIA_FREETYPE_LIBRARY = ${SKIA_FREETYPE_LIBRARY} (if empty, link freetype to the final image)")
+
+set(PORTS_SRCS_UNIX_POSIX
+    "src/ports/SkOSFile_posix.cpp"
+    "src/ports/SkOSLibrary_posix.cpp"
+)
+
+set(PORTS_SRCS_UNIX_WIN
+    "src/ports/SkOSFile_win.cpp"
+)
+
+if (WIN32 AND NOT ANDROID)
+set(PORTS_SRCS_UNIX_PLATFORM ${PORTS_SRCS_UNIX_WIN})
 else()
-    message(STATUS "Freetype will be downloaded from GitHub: VER-2-13-2")
-    ExternalProject_Add(libfreetype
-        GIT_REPOSITORY    https://github.com/freetype/freetype.git
-        GIT_TAG           VER-2-13-2
-        SOURCE_DIR        "${CMAKE_BINARY_DIR}/freetype-src"
-        BINARY_DIR        "${CMAKE_BINARY_DIR}/freetype-build"
-        INSTALL_COMMAND   ""
-        TEST_COMMAND      ""
-        CMAKE_ARGS        -DDISABLE_FORCE_DEBUG_POSTFIX:BOOL=ON
-    )
-    set(SKIA_FREETYPE_DEPENDENCY libfreetype)
-    set(SKIA_FREETYPE_LIBRARY freetype)
-    set(SKIA_FREETYPE_INCLUDE_DIRS "${CMAKE_BINARY_DIR}/freetype-build/include" "${CMAKE_BINARY_DIR}/freetype-src/include")
+set(PORTS_SRCS_UNIX_PLATFORM ${PORTS_SRCS_UNIX_POSIX})
 endif()
 
 set(PORTS_SRCS_UNIX
@@ -1806,24 +1762,16 @@ set(PORTS_SRCS_UNIX
     # "src/ports/SkFontMgr_fontconfig.cpp"
     "src/ports/SkGlobalInitialization_default.cpp"
     "src/ports/SkMemory_malloc.cpp"
-    "src/ports/SkOSFile_posix.cpp"
     "src/ports/SkOSFile_stdio.cpp"
     "src/ports/SkOSLibrary.h"
-    "src/ports/SkOSLibrary_posix.cpp"
     "src/ports/SkTypeface_FreeType.h"
+    ${PORTS_SRCS_UNIX_PLATFORM}
 )
 
 add_library(SkiaPort STATIC ${PORTS_SRCS_UNIX})
 target_include_directories(SkiaPort PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}" "${SKIA_FREETYPE_INCLUDE_DIRS}")
 target_compile_definitions(SkiaPort PUBLIC ${SKIA_ALL_DEFINITIONS})
-
-if (DEFINED SKIA_FREETYPE_DEPENDENCY)
-    add_dependencies(SkiaPort ${SKIA_FREETYPE_DEPENDENCY}) 
-endif()
-
-if (DEFINED SKIA_FREETYPE_LIBRARY)
-    target_link_libraries (SkiaPort PRIVATE ${SKIA_FREETYPE_LIBRARY})
-endif()
+target_link_libraries(SkiaPort PRIVATE Freetype::Freetype)
 
 set(SKSG_LIB_SRCS
     "modules/sksg/src/SkSGClipEffect.cpp"
@@ -1995,45 +1943,42 @@ set(SKOTTIE_LIB_SRCS
 add_library(SkiaSkottie STATIC ${SKOTTIE_LIB_SRCS})
 target_include_directories(SkiaSkottie PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
-message(STATUS "(Predefined) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN} (should be automatically detected unless forced externally)")
-message(STATUS "(Predefined) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
+# message(STATUS "(Predefined) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN} (should be automatically detected unless forced externally)")
+# message(STATUS "(Predefined) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
 
-FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
-FetchContent_MakeAvailable(Corrosion)
+# FetchContent_Declare(Corrosion GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git GIT_TAG v0.4.8)
+# FetchContent_MakeAvailable(Corrosion)
 
-message(STATUS "(Corrosion) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN}")
-message(STATUS "(Corrosion) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
+# message(STATUS "(Corrosion) Rust_TOOLCHAIN = ${Rust_TOOLCHAIN}")
+# message(STATUS "(Corrosion) Rust_CARGO_TARGET = ${Rust_CARGO_TARGET}")
 
-FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
-FetchContent_MakeAvailable(libicu4x)
-corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
+# FetchContent_Declare(libicu4x GIT_REPOSITORY https://github.com/unicode-org/icu4x.git GIT_TAG ind/icu_capi@1.4.1)
+# FetchContent_MakeAvailable(libicu4x)
+# corrosion_import_crate(MANIFEST_PATH "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/Cargo.toml")
 
 set(SKUNICODE_ICU_BUILTIN_SRCS
     "modules/skunicode/src/SkUnicode.cpp"
-    "modules/skunicode/src/SkUnicode_icu4x.cpp"
+    "modules/skunicode/src/SkUnicode_icu.cpp"
+    "modules/skunicode/src/SkUnicode_icu_bidi.cpp"
+    # "modules/skunicode/src/SkUnicode_icu_builtin.cpp"
+    # "modules/skunicode/src/SkUnicode_icu_runtime.cpp"
+    # "modules/skunicode/src/SkUnicode_icu4x.cpp"
 )
 
 add_library(SkiaUnicode STATIC ${SKUNICODE_ICU_BUILTIN_SRCS})
-target_include_directories(SkiaUnicode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include"
-    "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include"
-)
+target_include_directories(SkiaUnicode PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+#     "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/c/include"
+#     "${CMAKE_BINARY_DIR}/_deps/libicu4x-src/ffi/capi/cpp/include"
+# )
 
-target_link_libraries(SkiaUnicode PRIVATE
-    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
-    DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
-    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
-    OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
-)
+target_link_libraries (SkiaUnicode PRIVATE icu::icu)
 
-ExternalProject_Add(libharfbuzz
-    GIT_REPOSITORY    https://github.com/harfbuzz/harfbuzz.git
-    GIT_TAG           8.4.0
-    SOURCE_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-src"
-    BINARY_DIR        "${CMAKE_BINARY_DIR}/libharfbuzz-build"
-    INSTALL_COMMAND   ""
-    TEST_COMMAND      ""
-)
+# target_link_libraries(SkiaUnicode PRIVATE
+#     DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
+#     DEBUG "${CMAKE_BINARY_DIR}/Debug/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
+#     OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_capi_staticlib.a"
+#     OPTIMIZED "${CMAKE_BINARY_DIR}/Release/cargo/build/${Rust_TOOLCHAIN}/debug/libicu_freertos.a"
+# )
 
 set(SKSHAPER_HARFBUZZ_SRCS
     "modules/skshaper/src/SkShaper.cpp"
@@ -2044,14 +1989,8 @@ set(SKSHAPER_HARFBUZZ_SRCS
 )
 
 add_library(SkiaShaper STATIC ${SKSHAPER_HARFBUZZ_SRCS})
-add_dependencies(SkiaShaper libharfbuzz)
-target_include_directories(SkiaShaper PUBLIC
-    "${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_BINARY_DIR}/libharfbuzz-src/src"
-    "${CMAKE_BINARY_DIR}/libharfbuzz-build"
-)
-
-target_link_libraries (SkiaShaper PRIVATE harfbuzz)
+target_include_directories(SkiaShaper PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries (SkiaShaper PRIVATE harfbuzz::harfbuzz)
 target_compile_definitions(SkiaShaper PUBLIC ${SKIA_ALL_DEFINITIONS})
 
 set(SVG_LIB_SRCS
@@ -2111,6 +2050,7 @@ set(XML_SRCS
 
 add_library(SkiaXML STATIC ${XML_SRCS})
 target_include_directories(SkiaXML PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(SkiaXML PRIVATE expat::expat)
 
 set(GRAPHITE_SRCS
     "src/gpu/graphite/Image_YUVA_Graphite.cpp"
@@ -2209,8 +2149,8 @@ add_library(SkiaGraphite STATIC ${GRAPHITE_SRCS})
 target_include_directories(SkiaGraphite PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 target_compile_definitions(SkiaGraphite PUBLIC ${SKIA_ALL_DEFINITIONS})
 
-add_library(skia STATIC CMakeLists_SkiaEmpty.cpp)
-target_link_libraries(skia PUBLIC
+add_library(skia INTERFACE)
+target_link_libraries(skia INTERFACE
     SkiaBase
     SkiaCodec
     SkiaEncode
