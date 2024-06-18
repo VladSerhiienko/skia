@@ -2169,3 +2169,19 @@ target_link_libraries(skia INTERFACE
     SkiaWebp
     SkiaXML
 )
+
+file(
+    GLOB_RECURSE
+    ALL_SKIA_SOURCES
+    RELATIVE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/**.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/**.c
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/**.hpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/**.h
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/**.hpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/**.h)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${ALL_SKIA_SOURCES})
