@@ -2175,6 +2175,11 @@ file(
     ALL_SKIA_SOURCES
     RELATIVE
         ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/**.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/**.cc
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/**.c
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/**.hpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/**.h
             ${CMAKE_CURRENT_SOURCE_DIR}/src/**.cpp
             ${CMAKE_CURRENT_SOURCE_DIR}/src/**.cc
             ${CMAKE_CURRENT_SOURCE_DIR}/src/**.c
